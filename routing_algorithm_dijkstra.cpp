@@ -114,12 +114,6 @@ int main(){
     }
   }
 
-  cout << "Vertices are following : " << endl;
-  for (size_t i = 0; i < itov.size(); i++) {
-    cout << itov[i] << endl;
-    vtoi[itov[i]] = i ;
-  }
-
   //resizing alist and wlist
   int n = itov.size();
   alist.resize(n);
@@ -175,13 +169,6 @@ int main(){
     }
   }
 
-  cout << "Edges are following : " << endl;
-  for (int i = 0 ; i < alist.size(); i++){
-    for (int j = 0 ; j < alist[i].size() ; j++){
-      cout << itov[i] << "\t" << itov[alist[i][j]] << "\t" << wlist[i][j] << endl;
-    }
-  }
-
   while (true) {
     string source, dist ;
     std::cout << "Give source and destination IP: " ;
@@ -214,6 +201,5 @@ int main(){
       }
     }
   }
-
   return 0;
 }
