@@ -24,6 +24,25 @@ v_2d alist; // adjacency list
 v_2d wlist; // weight list
 int distance_of_t;
 
+bool from_same_subnet(string s1, string s2){
+  string t1 = "", t2 = "";
+  int point_found = 0 ;
+  for(int i=0; i < s1.length(); i++){
+    if(s1[i] == '.') point_found++;
+    if(!(point_found >= 3)){
+      t1 = t1 + s1[i];
+    }
+  }
+  point_found = 0 ;
+  for(int i=0; i < s2.length(); i++){
+    if(s2[i] == '.') point_found++;
+    if(!(point_found >= 3)){
+      t2 = t2 + s2[i];
+    }
+  }
+  return t1 == t2;
+}
+
 void connect(vs sip, int l){
   /*
   Input :- vector of vertices, sip = v1,v2...vN, and integer l if we want to connect i to every j with weight l where i,j belongs to sip and i != j
@@ -61,11 +80,8 @@ vi d_spath(int s, int t){
   vi d(n,1000000000); // set all d to infinite
   vi prev(n, -1);
   d[s] = 0;
-
   priority_queue <pii, vii, greater<pii> > H;
-  for (size_t i = 0; i < n; i++) {
-    H.push({d[i], i});
-  }
+  H.push({d[s],s});
   while(!H.empty()){
     int x = H.top().second;
     H.pop();
@@ -74,6 +90,7 @@ vi d_spath(int s, int t){
       if (d[y] > d[x] + wlist[x][i]) {
         d[y] = d[x] + wlist[x][i];
         prev[y] = x;
+        H.push({d[y],y});
       }
     }
   }
@@ -81,7 +98,6 @@ vi d_spath(int s, int t){
   vi rev_path;
   int m = t ;
   distance_of_t = 0 ;
-  cout << "Here is the path : " << endl;
   while (m != -1){
     rev_path.push_back(m);
     if (prev[m] != -1){
@@ -114,6 +130,11 @@ int main(){
     }
   }
 
+  // giving index to each vertices
+  for (size_t i = 0; i < itov.size(); i++) {
+    vtoi[itov[i]] = i ;
+  }
+
   //resizing alist and wlist
   int n = itov.size();
   alist.resize(n);
@@ -143,7 +164,6 @@ int main(){
   }
   connect(stmp,0);
   stmp.resize(0);
-
   // storing edges into adjacency list
   isNewIpStarting = true;
   for (size_t i = 0; i < InterfaceDistance.length(); i++) {
@@ -160,12 +180,31 @@ int main(){
       int len = stoi(stmp.back());
       stmp.pop_back();
       connect(stmp,len);
-
       stmp.resize(0);
       isNewIpStarting = true;
     }
     else if (! isNewIpStarting) {
       stmp[stmp.size() - 1] += InterfaceDistance[i];
+    }
+  }
+  // Storing edges due to subnet
+  // 1. Finding clients
+  vi clients;
+  for(int i = 0 ; i < alist.size(); i++){
+    if(alist[i].size() == 0){
+      clients.push_back(i);
+    }
+  }
+  // 2. Connecting clients to the subnet
+  for (size_t i = 0 ; i < clients.size(); i++){ // go through every client
+    for (size_t j = 0 ; j < alist.size() ; j++){ // for every client check every vertex
+      if ( j == clients[i] ) continue; // skip the same vertex
+      if ( from_same_subnet(itov[clients[i]], itov[j]) ){ // if vertex is from same subnet then add edge of length 1 between them
+        stmp.resize(0);
+        stmp.push_back(itov[clients[i]]);
+        stmp.push_back(itov[j]);
+        connect(stmp,1);
+      }
     }
   }
 
