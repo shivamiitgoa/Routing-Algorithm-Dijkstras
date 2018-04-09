@@ -25,6 +25,9 @@ v_2d wlist; // weight list
 int distance_of_t;
 
 bool from_same_subnet(string s1, string s2){
+  /* 
+    This function take 2 strings which is 2 ip addresses and returns if they belong to the same subnet of subnet mask of 24 bits
+  */
   string t1 = "", t2 = "";
   int point_found = 0 ;
   for(int i=0; i < s1.length(); i++){
