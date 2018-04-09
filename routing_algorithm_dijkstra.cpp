@@ -38,7 +38,6 @@ void connect(vs sip, int l){
     for (size_t j = i + 1; j < iip.size(); j++) {
       alist[iip[i]].push_back(iip[j]);
       wlist[iip[i]].push_back(l);
-
       alist[iip[j]].push_back(iip[i]);
       wlist[iip[j]].push_back(l);
     }
@@ -72,8 +71,8 @@ vi d_spath(int s, int t){
     H.pop();
     for (size_t i = 0; i < alist[x].size(); i++) {
       int y = alist[x][i];
-      if (d[y] > d[x] + wlist[x][y]) {
-        d[y] = d[x] + wlist[x][y];
+      if (d[y] > d[x] + wlist[x][i]) {
+        d[y] = d[x] + wlist[x][i];
         prev[y] = x;
       }
     }
@@ -81,8 +80,12 @@ vi d_spath(int s, int t){
 
   vi rev_path;
   int m = t ;
+  distance_of_t = 0 ;
+  cout << "Here is the path : " << endl;
   while (m != -1){
     rev_path.push_back(m);
+    if (prev[m] != -1){
+    }
     m = prev[m];
   }
 
@@ -111,7 +114,9 @@ int main(){
     }
   }
 
+  cout << "Vertices are following : " << endl;
   for (size_t i = 0; i < itov.size(); i++) {
+    cout << itov[i] << endl;
     vtoi[itov[i]] = i ;
   }
 
@@ -167,6 +172,13 @@ int main(){
     }
     else if (! isNewIpStarting) {
       stmp[stmp.size() - 1] += InterfaceDistance[i];
+    }
+  }
+
+  cout << "Edges are following : " << endl;
+  for (int i = 0 ; i < alist.size(); i++){
+    for (int j = 0 ; j < alist[i].size() ; j++){
+      cout << itov[i] << "\t" << itov[alist[i][j]] << "\t" << wlist[i][j] << endl;
     }
   }
 
