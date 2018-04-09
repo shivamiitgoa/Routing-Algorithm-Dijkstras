@@ -1,3 +1,4 @@
+// We are using these packages
 #include <iostream>
 #include <queue>
 #include <vector>
@@ -6,7 +7,7 @@
 
 using namespace std;
 
-#include "network.h"
+#include "network.h" // Here we are importing network.h file for furthur use
 
 // Defining types which will be used inside program
 typedef pair <int, int> pii;
@@ -21,6 +22,7 @@ vs itov; // index to vertex
 msi vtoi; // vertex to index
 v_2d alist; // adjacency list
 v_2d wlist; // weight list
+int distance_of_t;
 
 void connect(vs sip, int l){
   /*
@@ -88,7 +90,7 @@ vi d_spath(int s, int t){
   for (size_t i = 0; i < path_len; i++) {
     path.push_back(rev_path[path_len - i - 1]);
   }
-
+  distance_of_t = d[t];
   return path;
 }
 
@@ -187,6 +189,7 @@ int main(){
     source = comma_removed_source;
     cin >> dist;
     vi path_indices = d_spath(vtoi[source], vtoi[dist]);
+    std::cout << "Distance of shortest path from " << source << " to " << dist << " is : " << distance_of_t << endl;
     std::cout << "The packet from " << source << " to " << dist << " goes via the following router interfaces: ";
     // Print the path after converting indices of path into string
     for (size_t i = 0; i < path_indices.size(); i++) {
